@@ -134,7 +134,6 @@ var ImageModule = function () {
 			} else if ((typeof tagValue === "undefined" ? "undefined" : _typeof(tagValue)) === "object") {
 				return this.getRenderedPart(part, tagValue.rId, tagValue.sizePixel);
 			}
-			// this.imgManagers[options.filePath] = this.imgManagers[options.filePath] || new ImgManager(this.zip, options.filePath, this.xmlDocuments, this.fileType);
 			var imgManager = new ImgManager(this.zip, options.filePath, this.xmlDocuments, this.fileType);
 			var imgBuffer = this.options.getImage(tagValue, part.value);
 			var rId = imgManager.addImageRels(this.getNextImageName(), imgBuffer);
@@ -146,7 +145,6 @@ var ImageModule = function () {
 		value: function resolve(part, options) {
 			var _this = this;
 
-			// this.imgManagers[options.filePath] = this.imgManagers[options.filePath] || new ImgManager(this.zip, options.filePath, this.xmlDocuments, this.fileType);
 			var imgManager = new ImgManager(this.zip, options.filePath, this.xmlDocuments, this.fileType);
 			if (!part.type === "placeholder" || part.module !== moduleName) {
 				return null;
@@ -221,7 +219,7 @@ var ImageModule = function () {
 }();
 
 module.exports = ImageModule;
-},{"./imgManager":2,"./templates":3,"docxtemplater":5,"xmldom":25}],1:[function(require,module,exports){
+},{"./imgManager":3,"./templates":4,"docxtemplater":6,"xmldom":26}],1:[function(require,module,exports){
 "use strict";
 
 var DocUtils = require("docxtemplater").DocUtils;
@@ -229,7 +227,17 @@ DocUtils.convertPixelsToEmus = function (pixel) {
 	return Math.round(pixel * 9525);
 };
 module.exports = DocUtils;
-},{"docxtemplater":5}],2:[function(require,module,exports){
+},{"docxtemplater":6}],2:[function(require,module,exports){
+"use strict";
+
+var lastId = 10000;
+
+module.exports = {
+	getNextId: function getNextId() {
+		return lastId++;
+	}
+};
+},{}],3:[function(require,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -362,21 +370,29 @@ module.exports = function () {
 
 	return ImgManager;
 }();
-},{"./docUtils":1}],3:[function(require,module,exports){
+},{"./docUtils":1}],4:[function(require,module,exports){
 "use strict";
+
+var idGenerator = require("./idGenerator");
 
 module.exports = {
 	getImageXml: function getImageXml(rId, size) {
-		return ("<w:drawing>\n\t\t<wp:inline distT=\"0\" distB=\"0\" distL=\"0\" distR=\"0\">\n\t\t\t<wp:extent cx=\"" + size[0] + "\" cy=\"" + size[1] + "\"/>\n\t\t\t<wp:effectExtent l=\"0\" t=\"0\" r=\"0\" b=\"0\"/>\n\t\t\t<wp:docPr id=\"2\" name=\"Image 2\" descr=\"image\"/>\n\t\t\t<wp:cNvGraphicFramePr>\n\t\t\t\t<a:graphicFrameLocks xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" noChangeAspect=\"1\"/>\n\t\t\t</wp:cNvGraphicFramePr>\n\t\t\t<a:graphic xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\">\n\t\t\t\t<a:graphicData uri=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">\n\t\t\t\t\t<pic:pic xmlns:pic=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">\n\t\t\t\t\t\t<pic:nvPicPr>\n\t\t\t\t\t\t\t<pic:cNvPr id=\"0\" name=\"Picture 1\" descr=\"image\"/>\n\t\t\t\t\t\t\t<pic:cNvPicPr>\n\t\t\t\t\t\t\t\t<a:picLocks noChangeAspect=\"1\" noChangeArrowheads=\"1\"/>\n\t\t\t\t\t\t\t</pic:cNvPicPr>\n\t\t\t\t\t\t</pic:nvPicPr>\n\t\t\t\t\t\t<pic:blipFill>\n\t\t\t\t\t\t\t<a:blip r:embed=\"rId" + rId + "\">\n\t\t\t\t\t\t\t\t<a:extLst>\n\t\t\t\t\t\t\t\t\t<a:ext uri=\"{28A0092B-C50C-407E-A947-70E740481C1C}\">\n\t\t\t\t\t\t\t\t\t\t<a14:useLocalDpi xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\" val=\"0\"/>\n\t\t\t\t\t\t\t\t\t</a:ext>\n\t\t\t\t\t\t\t\t</a:extLst>\n\t\t\t\t\t\t\t</a:blip>\n\t\t\t\t\t\t\t<a:srcRect/>\n\t\t\t\t\t\t\t<a:stretch>\n\t\t\t\t\t\t\t\t<a:fillRect/>\n\t\t\t\t\t\t\t</a:stretch>\n\t\t\t\t\t\t</pic:blipFill>\n\t\t\t\t\t\t<pic:spPr bwMode=\"auto\">\n\t\t\t\t\t\t\t<a:xfrm>\n\t\t\t\t\t\t\t\t<a:off x=\"0\" y=\"0\"/>\n\t\t\t\t\t\t\t\t<a:ext cx=\"" + size[0] + "\" cy=\"" + size[1] + "\"/>\n\t\t\t\t\t\t\t</a:xfrm>\n\t\t\t\t\t\t\t<a:prstGeom prst=\"rect\">\n\t\t\t\t\t\t\t\t<a:avLst/>\n\t\t\t\t\t\t\t</a:prstGeom>\n\t\t\t\t\t\t\t<a:noFill/>\n\t\t\t\t\t\t\t<a:ln>\n\t\t\t\t\t\t\t\t<a:noFill/>\n\t\t\t\t\t\t\t</a:ln>\n\t\t\t\t\t\t</pic:spPr>\n\t\t\t\t\t</pic:pic>\n\t\t\t\t</a:graphicData>\n\t\t\t</a:graphic>\n\t\t</wp:inline>\n\t</w:drawing>\n\t\t").replace(/\t|\n/g, "");
+		var id = idGenerator.getNextId();
+
+		return ("<w:drawing>\n\t\t<wp:inline distT=\"0\" distB=\"0\" distL=\"0\" distR=\"0\">\n\t\t\t<wp:extent cx=\"" + size[0] + "\" cy=\"" + size[1] + "\"/>\n\t\t\t<wp:effectExtent l=\"0\" t=\"0\" r=\"0\" b=\"0\"/>\n\t\t\t<wp:docPr id=\"" + id + "\" name=\"Image " + id + "\" descr=\"image\"/>\n\t\t\t<wp:cNvGraphicFramePr>\n\t\t\t\t<a:graphicFrameLocks xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" noChangeAspect=\"1\"/>\n\t\t\t</wp:cNvGraphicFramePr>\n\t\t\t<a:graphic xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\">\n\t\t\t\t<a:graphicData uri=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">\n\t\t\t\t\t<pic:pic xmlns:pic=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">\n\t\t\t\t\t\t<pic:nvPicPr>\n\t\t\t\t\t\t\t<pic:cNvPr id=\"" + id + "\" name=\"Picture " + id + "\" descr=\"image\"/>\n\t\t\t\t\t\t\t<pic:cNvPicPr>\n\t\t\t\t\t\t\t\t<a:picLocks noChangeAspect=\"1\" noChangeArrowheads=\"1\"/>\n\t\t\t\t\t\t\t</pic:cNvPicPr>\n\t\t\t\t\t\t</pic:nvPicPr>\n\t\t\t\t\t\t<pic:blipFill>\n\t\t\t\t\t\t\t<a:blip r:embed=\"rId" + rId + "\">\n\t\t\t\t\t\t\t\t<a:extLst>\n\t\t\t\t\t\t\t\t\t<a:ext uri=\"{28A0092B-C50C-407E-A947-70E740481C1C}\">\n\t\t\t\t\t\t\t\t\t\t<a14:useLocalDpi xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\" val=\"0\"/>\n\t\t\t\t\t\t\t\t\t</a:ext>\n\t\t\t\t\t\t\t\t</a:extLst>\n\t\t\t\t\t\t\t</a:blip>\n\t\t\t\t\t\t\t<a:srcRect/>\n\t\t\t\t\t\t\t<a:stretch>\n\t\t\t\t\t\t\t\t<a:fillRect/>\n\t\t\t\t\t\t\t</a:stretch>\n\t\t\t\t\t\t</pic:blipFill>\n\t\t\t\t\t\t<pic:spPr bwMode=\"auto\">\n\t\t\t\t\t\t\t<a:xfrm>\n\t\t\t\t\t\t\t\t<a:off x=\"0\" y=\"0\"/>\n\t\t\t\t\t\t\t\t<a:ext cx=\"" + size[0] + "\" cy=\"" + size[1] + "\"/>\n\t\t\t\t\t\t\t</a:xfrm>\n\t\t\t\t\t\t\t<a:prstGeom prst=\"rect\">\n\t\t\t\t\t\t\t\t<a:avLst/>\n\t\t\t\t\t\t\t</a:prstGeom>\n\t\t\t\t\t\t\t<a:noFill/>\n\t\t\t\t\t\t\t<a:ln>\n\t\t\t\t\t\t\t\t<a:noFill/>\n\t\t\t\t\t\t\t</a:ln>\n\t\t\t\t\t\t</pic:spPr>\n\t\t\t\t\t</pic:pic>\n\t\t\t\t</a:graphicData>\n\t\t\t</a:graphic>\n\t\t</wp:inline>\n\t</w:drawing>\n\t\t").replace(/\t|\n/g, "");
 	},
 	getImageXmlCentered: function getImageXmlCentered(rId, size) {
-		return ("<w:p>\n\t\t\t<w:pPr>\n\t\t\t\t<w:jc w:val=\"center\"/>\n\t\t\t</w:pPr>\n\t\t\t<w:r>\n\t\t\t\t<w:rPr/>\n\t\t\t\t<w:drawing>\n\t\t\t\t\t<wp:inline distT=\"0\" distB=\"0\" distL=\"0\" distR=\"0\">\n\t\t\t\t\t<wp:extent cx=\"" + size[0] + "\" cy=\"" + size[1] + "\"/>\n\t\t\t\t\t<wp:docPr id=\"0\" name=\"Picture\" descr=\"\"/>\n\t\t\t\t\t<a:graphic xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\">\n\t\t\t\t\t\t<a:graphicData uri=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">\n\t\t\t\t\t\t<pic:pic xmlns:pic=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">\n\t\t\t\t\t\t\t<pic:nvPicPr>\n\t\t\t\t\t\t\t<pic:cNvPr id=\"0\" name=\"Picture\" descr=\"\"/>\n\t\t\t\t\t\t\t<pic:cNvPicPr>\n\t\t\t\t\t\t\t\t<a:picLocks noChangeAspect=\"1\" noChangeArrowheads=\"1\"/>\n\t\t\t\t\t\t\t</pic:cNvPicPr>\n\t\t\t\t\t\t\t</pic:nvPicPr>\n\t\t\t\t\t\t\t<pic:blipFill>\n\t\t\t\t\t\t\t<a:blip r:embed=\"rId" + rId + "\"/>\n\t\t\t\t\t\t\t<a:stretch>\n\t\t\t\t\t\t\t\t<a:fillRect/>\n\t\t\t\t\t\t\t</a:stretch>\n\t\t\t\t\t\t\t</pic:blipFill>\n\t\t\t\t\t\t\t<pic:spPr bwMode=\"auto\">\n\t\t\t\t\t\t\t<a:xfrm>\n\t\t\t\t\t\t\t\t<a:off x=\"0\" y=\"0\"/>\n\t\t\t\t\t\t\t\t<a:ext cx=\"" + size[0] + "\" cy=\"" + size[1] + "\"/>\n\t\t\t\t\t\t\t</a:xfrm>\n\t\t\t\t\t\t\t<a:prstGeom prst=\"rect\">\n\t\t\t\t\t\t\t\t<a:avLst/>\n\t\t\t\t\t\t\t</a:prstGeom>\n\t\t\t\t\t\t\t<a:noFill/>\n\t\t\t\t\t\t\t<a:ln w=\"9525\">\n\t\t\t\t\t\t\t\t<a:noFill/>\n\t\t\t\t\t\t\t\t<a:miter lim=\"800000\"/>\n\t\t\t\t\t\t\t\t<a:headEnd/>\n\t\t\t\t\t\t\t\t<a:tailEnd/>\n\t\t\t\t\t\t\t</a:ln>\n\t\t\t\t\t\t\t</pic:spPr>\n\t\t\t\t\t\t</pic:pic>\n\t\t\t\t\t\t</a:graphicData>\n\t\t\t\t\t</a:graphic>\n\t\t\t\t\t</wp:inline>\n\t\t\t\t</w:drawing>\n\t\t\t</w:r>\n\t\t</w:p>\n\t\t").replace(/\t|\n/g, "");
+		var id = idGenerator.getNextId();
+
+		return ("<w:p>\n\t\t\t<w:pPr>\n\t\t\t\t<w:jc w:val=\"center\"/>\n\t\t\t</w:pPr>\n\t\t\t<w:r>\n\t\t\t\t<w:rPr/>\n\t\t\t\t<w:drawing>\n\t\t\t\t\t<wp:inline distT=\"0\" distB=\"0\" distL=\"0\" distR=\"0\">\n\t\t\t\t\t<wp:extent cx=\"" + size[0] + "\" cy=\"" + size[1] + "\"/>\n\t\t\t\t\t<wp:docPr id=\"" + id + "\" name=\"Picture " + id + "\" descr=\"\"/>\n\t\t\t\t\t<a:graphic xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\">\n\t\t\t\t\t\t<a:graphicData uri=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">\n\t\t\t\t\t\t<pic:pic xmlns:pic=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">\n\t\t\t\t\t\t\t<pic:nvPicPr>\n\t\t\t\t\t\t\t<pic:cNvPr id=\"" + id + "\" name=\"Picture " + id + "\" descr=\"\"/>\n\t\t\t\t\t\t\t<pic:cNvPicPr>\n\t\t\t\t\t\t\t\t<a:picLocks noChangeAspect=\"1\" noChangeArrowheads=\"1\"/>\n\t\t\t\t\t\t\t</pic:cNvPicPr>\n\t\t\t\t\t\t\t</pic:nvPicPr>\n\t\t\t\t\t\t\t<pic:blipFill>\n\t\t\t\t\t\t\t<a:blip r:embed=\"rId" + rId + "\"/>\n\t\t\t\t\t\t\t<a:stretch>\n\t\t\t\t\t\t\t\t<a:fillRect/>\n\t\t\t\t\t\t\t</a:stretch>\n\t\t\t\t\t\t\t</pic:blipFill>\n\t\t\t\t\t\t\t<pic:spPr bwMode=\"auto\">\n\t\t\t\t\t\t\t<a:xfrm>\n\t\t\t\t\t\t\t\t<a:off x=\"0\" y=\"0\"/>\n\t\t\t\t\t\t\t\t<a:ext cx=\"" + size[0] + "\" cy=\"" + size[1] + "\"/>\n\t\t\t\t\t\t\t</a:xfrm>\n\t\t\t\t\t\t\t<a:prstGeom prst=\"rect\">\n\t\t\t\t\t\t\t\t<a:avLst/>\n\t\t\t\t\t\t\t</a:prstGeom>\n\t\t\t\t\t\t\t<a:noFill/>\n\t\t\t\t\t\t\t<a:ln w=\"9525\">\n\t\t\t\t\t\t\t\t<a:noFill/>\n\t\t\t\t\t\t\t\t<a:miter lim=\"800000\"/>\n\t\t\t\t\t\t\t\t<a:headEnd/>\n\t\t\t\t\t\t\t\t<a:tailEnd/>\n\t\t\t\t\t\t\t</a:ln>\n\t\t\t\t\t\t\t</pic:spPr>\n\t\t\t\t\t\t</pic:pic>\n\t\t\t\t\t\t</a:graphicData>\n\t\t\t\t\t</a:graphic>\n\t\t\t\t\t</wp:inline>\n\t\t\t\t</w:drawing>\n\t\t\t</w:r>\n\t\t</w:p>\n\t\t").replace(/\t|\n/g, "");
 	},
 	getPptxImageXml: function getPptxImageXml(rId, size, offset) {
-		return ("<p:pic>\n\t\t\t<p:nvPicPr>\n\t\t\t\t<p:cNvPr id=\"6\" name=\"Picture 2\"/>\n\t\t\t\t<p:cNvPicPr>\n\t\t\t\t\t<a:picLocks noChangeAspect=\"1\" noChangeArrowheads=\"1\"/>\n\t\t\t\t</p:cNvPicPr>\n\t\t\t\t<p:nvPr/>\n\t\t\t</p:nvPicPr>\n\t\t\t<p:blipFill>\n\t\t\t\t<a:blip r:embed=\"rId" + rId + "\" cstate=\"print\">\n\t\t\t\t\t<a:extLst>\n\t\t\t\t\t\t<a:ext uri=\"{28A0092B-C50C-407E-A947-70E740481C1C}\">\n\t\t\t\t\t\t\t<a14:useLocalDpi xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\" val=\"0\"/>\n\t\t\t\t\t\t</a:ext>\n\t\t\t\t\t</a:extLst>\n\t\t\t\t</a:blip>\n\t\t\t\t<a:srcRect/>\n\t\t\t\t<a:stretch>\n\t\t\t\t\t<a:fillRect/>\n\t\t\t\t</a:stretch>\n\t\t\t</p:blipFill>\n\t\t\t<p:spPr bwMode=\"auto\">\n\t\t\t\t<a:xfrm>\n\t\t\t\t\t<a:off x=\"" + offset.x + "\" y=\"" + offset.y + "\"/>\n\t\t\t\t\t<a:ext cx=\"" + size[0] + "\" cy=\"" + size[1] + "\"/>\n\t\t\t\t</a:xfrm>\n\t\t\t\t<a:prstGeom prst=\"rect\">\n\t\t\t\t\t<a:avLst/>\n\t\t\t\t</a:prstGeom>\n\t\t\t\t<a:noFill/>\n\t\t\t\t<a:ln>\n\t\t\t\t\t<a:noFill/>\n\t\t\t\t</a:ln>\n\t\t\t\t<a:effectLst/>\n\t\t\t\t<a:extLst>\n\t\t\t\t\t<a:ext uri=\"{909E8E84-426E-40DD-AFC4-6F175D3DCCD1}\">\n\t\t\t\t\t\t<a14:hiddenFill xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\">\n\t\t\t\t\t\t\t<a:solidFill>\n\t\t\t\t\t\t\t\t<a:schemeClr val=\"accent1\"/>\n\t\t\t\t\t\t\t</a:solidFill>\n\t\t\t\t\t\t</a14:hiddenFill>\n\t\t\t\t\t</a:ext>\n\t\t\t\t\t<a:ext uri=\"{91240B29-F687-4F45-9708-019B960494DF}\">\n\t\t\t\t\t\t<a14:hiddenLine xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\" w=\"9525\">\n\t\t\t\t\t\t\t<a:solidFill>\n\t\t\t\t\t\t\t\t<a:schemeClr val=\"tx1\"/>\n\t\t\t\t\t\t\t</a:solidFill>\n\t\t\t\t\t\t\t<a:miter lim=\"800000\"/>\n\t\t\t\t\t\t\t<a:headEnd/>\n\t\t\t\t\t\t\t<a:tailEnd/>\n\t\t\t\t\t\t</a14:hiddenLine>\n\t\t\t\t\t</a:ext>\n\t\t\t\t\t<a:ext uri=\"{AF507438-7753-43E0-B8FC-AC1667EBCBE1}\">\n\t\t\t\t\t\t<a14:hiddenEffects xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\">\n\t\t\t\t\t\t\t<a:effectLst>\n\t\t\t\t\t\t\t\t<a:outerShdw dist=\"35921\" dir=\"2700000\" algn=\"ctr\" rotWithShape=\"0\">\n\t\t\t\t\t\t\t\t\t<a:schemeClr val=\"bg2\"/>\n\t\t\t\t\t\t\t\t</a:outerShdw>\n\t\t\t\t\t\t\t</a:effectLst>\n\t\t\t\t\t\t</a14:hiddenEffects>\n\t\t\t\t\t</a:ext>\n\t\t\t\t</a:extLst>\n\t\t\t</p:spPr>\n\t\t</p:pic>\n\t\t").replace(/\t|\n/g, "");
+		var id = idGenerator.getNextId();
+
+		return ("<p:pic>\n\t\t\t<p:nvPicPr>\n\t\t\t\t<p:cNvPr id=\"" + id + "\" name=\"Picture " + id + "\"/>\n\t\t\t\t<p:cNvPicPr>\n\t\t\t\t\t<a:picLocks noChangeAspect=\"1\" noChangeArrowheads=\"1\"/>\n\t\t\t\t</p:cNvPicPr>\n\t\t\t\t<p:nvPr/>\n\t\t\t</p:nvPicPr>\n\t\t\t<p:blipFill>\n\t\t\t\t<a:blip r:embed=\"rId" + rId + "\" cstate=\"print\">\n\t\t\t\t\t<a:extLst>\n\t\t\t\t\t\t<a:ext uri=\"{28A0092B-C50C-407E-A947-70E740481C1C}\">\n\t\t\t\t\t\t\t<a14:useLocalDpi xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\" val=\"0\"/>\n\t\t\t\t\t\t</a:ext>\n\t\t\t\t\t</a:extLst>\n\t\t\t\t</a:blip>\n\t\t\t\t<a:srcRect/>\n\t\t\t\t<a:stretch>\n\t\t\t\t\t<a:fillRect/>\n\t\t\t\t</a:stretch>\n\t\t\t</p:blipFill>\n\t\t\t<p:spPr bwMode=\"auto\">\n\t\t\t\t<a:xfrm>\n\t\t\t\t\t<a:off x=\"" + offset.x + "\" y=\"" + offset.y + "\"/>\n\t\t\t\t\t<a:ext cx=\"" + size[0] + "\" cy=\"" + size[1] + "\"/>\n\t\t\t\t</a:xfrm>\n\t\t\t\t<a:prstGeom prst=\"rect\">\n\t\t\t\t\t<a:avLst/>\n\t\t\t\t</a:prstGeom>\n\t\t\t\t<a:noFill/>\n\t\t\t\t<a:ln>\n\t\t\t\t\t<a:noFill/>\n\t\t\t\t</a:ln>\n\t\t\t\t<a:effectLst/>\n\t\t\t\t<a:extLst>\n\t\t\t\t\t<a:ext uri=\"{909E8E84-426E-40DD-AFC4-6F175D3DCCD1}\">\n\t\t\t\t\t\t<a14:hiddenFill xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\">\n\t\t\t\t\t\t\t<a:solidFill>\n\t\t\t\t\t\t\t\t<a:schemeClr val=\"accent1\"/>\n\t\t\t\t\t\t\t</a:solidFill>\n\t\t\t\t\t\t</a14:hiddenFill>\n\t\t\t\t\t</a:ext>\n\t\t\t\t\t<a:ext uri=\"{91240B29-F687-4F45-9708-019B960494DF}\">\n\t\t\t\t\t\t<a14:hiddenLine xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\" w=\"9525\">\n\t\t\t\t\t\t\t<a:solidFill>\n\t\t\t\t\t\t\t\t<a:schemeClr val=\"tx1\"/>\n\t\t\t\t\t\t\t</a:solidFill>\n\t\t\t\t\t\t\t<a:miter lim=\"800000\"/>\n\t\t\t\t\t\t\t<a:headEnd/>\n\t\t\t\t\t\t\t<a:tailEnd/>\n\t\t\t\t\t\t</a14:hiddenLine>\n\t\t\t\t\t</a:ext>\n\t\t\t\t\t<a:ext uri=\"{AF507438-7753-43E0-B8FC-AC1667EBCBE1}\">\n\t\t\t\t\t\t<a14:hiddenEffects xmlns:a14=\"http://schemas.microsoft.com/office/drawing/2010/main\">\n\t\t\t\t\t\t\t<a:effectLst>\n\t\t\t\t\t\t\t\t<a:outerShdw dist=\"35921\" dir=\"2700000\" algn=\"ctr\" rotWithShape=\"0\">\n\t\t\t\t\t\t\t\t\t<a:schemeClr val=\"bg2\"/>\n\t\t\t\t\t\t\t\t</a:outerShdw>\n\t\t\t\t\t\t\t</a:effectLst>\n\t\t\t\t\t\t</a14:hiddenEffects>\n\t\t\t\t\t</a:ext>\n\t\t\t\t</a:extLst>\n\t\t\t</p:spPr>\n\t\t</p:pic>\n\t\t").replace(/\t|\n/g, "");
 	}
 };
-},{}],4:[function(require,module,exports){
+},{"./idGenerator":2}],5:[function(require,module,exports){
 "use strict";
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -773,7 +789,7 @@ module.exports = {
   concatArrays: concatArrays,
   charMap: charMap
 };
-},{"./errors":6,"xmldom":25}],5:[function(require,module,exports){
+},{"./errors":7,"xmldom":26}],6:[function(require,module,exports){
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1106,7 +1122,7 @@ Docxtemplater.XmlTemplater = require("./xml-templater");
 Docxtemplater.FileTypeConfig = require("./file-type-config");
 Docxtemplater.XmlMatcher = require("./xml-matcher");
 module.exports = Docxtemplater;
-},{"./doc-utils":4,"./errors":6,"./file-type-config":7,"./lexer":8,"./module-wrapper":10,"./traits":22,"./xml-matcher":23,"./xml-templater":24}],6:[function(require,module,exports){
+},{"./doc-utils":5,"./errors":7,"./file-type-config":8,"./lexer":9,"./module-wrapper":11,"./traits":23,"./xml-matcher":24,"./xml-templater":25}],7:[function(require,module,exports){
 "use strict";
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
@@ -1428,7 +1444,7 @@ module.exports = {
   throwXmlTagNotFound: throwXmlTagNotFound,
   throwXmlInvalid: throwXmlInvalid
 };
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 var loopModule = require("./modules/loop");
@@ -1502,7 +1518,7 @@ module.exports = {
   docx: DocXFileTypeConfig,
   pptx: PptXFileTypeConfig
 };
-},{"./modules/expand-pair-trait":11,"./modules/loop":12,"./modules/rawxml":13,"./modules/render":14,"./modules/space-preserve":15}],8:[function(require,module,exports){
+},{"./modules/expand-pair-trait":12,"./modules/loop":13,"./modules/rawxml":14,"./modules/render":15,"./modules/space-preserve":16}],9:[function(require,module,exports){
 "use strict";
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
@@ -1971,7 +1987,7 @@ module.exports = {
     return parsed;
   }
 };
-},{"./doc-utils":4,"./errors":6}],9:[function(require,module,exports){
+},{"./doc-utils":5,"./errors":7}],10:[function(require,module,exports){
 "use strict";
 
 function getMinFromArrays(arrays, state) {
@@ -2016,7 +2032,7 @@ module.exports = function (arrays) {
 
   return resultArray;
 };
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 
 function emptyFun() {}
@@ -2052,7 +2068,7 @@ module.exports = function (module) {
   });
   return module;
 };
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
@@ -2242,7 +2258,7 @@ var expandPairTrait = {
 module.exports = function () {
   return wrapper(expandPairTrait);
 };
-},{"../doc-utils":4,"../errors":6,"../mergesort":9,"../module-wrapper":10,"../traits":22}],12:[function(require,module,exports){
+},{"../doc-utils":5,"../errors":7,"../mergesort":10,"../module-wrapper":11,"../traits":23}],13:[function(require,module,exports){
 "use strict";
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
@@ -2505,7 +2521,7 @@ function () {
 module.exports = function () {
   return wrapper(new LoopModule());
 };
-},{"../doc-utils":4,"../module-wrapper":10,"../prefix-matcher":18}],13:[function(require,module,exports){
+},{"../doc-utils":5,"../module-wrapper":11,"../prefix-matcher":19}],14:[function(require,module,exports){
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2651,7 +2667,7 @@ function () {
 module.exports = function () {
   return wrapper(new RawXmlModule());
 };
-},{"../doc-utils":4,"../errors":6,"../module-wrapper":10,"../prefix-matcher":18,"../traits":22}],14:[function(require,module,exports){
+},{"../doc-utils":5,"../errors":7,"../module-wrapper":11,"../prefix-matcher":19,"../traits":23}],15:[function(require,module,exports){
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2822,7 +2838,7 @@ function () {
 module.exports = function () {
   return wrapper(new Render());
 };
-},{"../doc-utils":4,"../errors":6,"../module-wrapper":10}],15:[function(require,module,exports){
+},{"../doc-utils":5,"../errors":7,"../module-wrapper":11}],16:[function(require,module,exports){
 "use strict";
 
 var wrapper = require("../module-wrapper");
@@ -2934,7 +2950,7 @@ var spacePreserve = {
 module.exports = function () {
   return wrapper(spacePreserve);
 };
-},{"../doc-utils":4,"../module-wrapper":10}],16:[function(require,module,exports){
+},{"../doc-utils":5,"../module-wrapper":11}],17:[function(require,module,exports){
 "use strict";
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
@@ -3046,7 +3062,7 @@ var parser = {
   }
 };
 module.exports = parser;
-},{"./doc-utils":4}],17:[function(require,module,exports){
+},{"./doc-utils":5}],18:[function(require,module,exports){
 "use strict";
 
 function postrender(parts, options) {
@@ -3059,7 +3075,7 @@ function postrender(parts, options) {
 }
 
 module.exports = postrender;
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 function match(condition, placeHolderContent) {
@@ -3093,7 +3109,7 @@ module.exports = {
   getValue: getValue,
   getValues: getValues
 };
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 "use strict";
 
 var _require = require("./doc-utils"),
@@ -3151,7 +3167,7 @@ function render(options) {
 }
 
 module.exports = render;
-},{"./doc-utils":4,"./errors":6}],20:[function(require,module,exports){
+},{"./doc-utils":5,"./errors":7}],21:[function(require,module,exports){
 "use strict";
 
 function moduleResolve(part, options) {
@@ -3223,7 +3239,7 @@ function resolve(options) {
 }
 
 module.exports = resolve;
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3429,7 +3445,7 @@ module.exports = function (options) {
   options.scopeList = [options.tags];
   return new ScopeManager(options);
 };
-},{"./errors":6}],22:[function(require,module,exports){
+},{"./errors":7}],23:[function(require,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -3674,7 +3690,7 @@ module.exports = {
   expandToOne: expandToOne,
   getExpandToDefault: getExpandToDefault
 };
-},{"./doc-utils":4,"./errors":6}],23:[function(require,module,exports){
+},{"./doc-utils":5,"./errors":7}],24:[function(require,module,exports){
 "use strict"; // res class responsibility is to parse the XML.
 
 var _require = require("./doc-utils"),
@@ -3743,7 +3759,7 @@ module.exports = function xmlMatcher(content, tagsXmlArray) {
   res.matches = pregMatchAll(regexp, res.content);
   return handleRecursiveCase(res);
 };
-},{"./doc-utils":4}],24:[function(require,module,exports){
+},{"./doc-utils":5}],25:[function(require,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -3983,7 +3999,7 @@ function () {
 
   return XmlTemplater;
 }();
-},{"./doc-utils":4,"./errors":6,"./lexer":8,"./parser.js":16,"./postrender.js":17,"./render.js":19,"./resolve.js":20,"./scope-manager":21,"./xml-matcher":23}],25:[function(require,module,exports){
+},{"./doc-utils":5,"./errors":7,"./lexer":9,"./parser.js":17,"./postrender.js":18,"./render.js":20,"./resolve.js":21,"./scope-manager":22,"./xml-matcher":24}],26:[function(require,module,exports){
 function DOMParser(options){
 	this.options = options ||{locator:{}};
 	
@@ -4236,7 +4252,7 @@ function appendElement (hander,node) {
 	exports.DOMParser = DOMParser;
 //}
 
-},{"./dom":26,"./sax":27}],26:[function(require,module,exports){
+},{"./dom":27,"./sax":28}],27:[function(require,module,exports){
 /*
  * DOM Level 2
  * Object DOMException
@@ -5482,7 +5498,7 @@ try{
 	exports.XMLSerializer = XMLSerializer;
 //}
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 //[4]   	NameStartChar	   ::=   	":" | [A-Z] | "_" | [a-z] | [#xC0-#xD6] | [#xD8-#xF6] | [#xF8-#x2FF] | [#x370-#x37D] | [#x37F-#x1FFF] | [#x200C-#x200D] | [#x2070-#x218F] | [#x2C00-#x2FEF] | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]
 //[4a]   	NameChar	   ::=   	NameStartChar | "-" | "." | [0-9] | #xB7 | [#x0300-#x036F] | [#x203F-#x2040]
 //[5]   	Name	   ::=   	NameStartChar (NameChar)*
